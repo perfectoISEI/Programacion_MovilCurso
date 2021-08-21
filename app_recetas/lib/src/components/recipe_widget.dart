@@ -14,35 +14,38 @@ class RecipeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(15, 20, 15, 0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(30),
-        child: Card(
-          child: Container(
-            height: 250,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: FileImage(recipe.photo),
-                fit: BoxFit.cover,
-              ),
-            ),
-            alignment: Alignment.bottomLeft,
+      child: GestureDetector(
+        onTap: () => _showDetails(context),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(30),
+          child: Card(
             child: Container(
-              color: Colors.black.withOpacity(0.35),
-              child: ListTile(
-                title: Text(
-                  recipe.name,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 16,
+              height: 250,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: FileImage(recipe.photo),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                color: Colors.black.withOpacity(0.35),
+                child: ListTile(
+                  title: Text(
+                    recipe.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
                   ),
+                  subtitle: Text(
+                    recipe.user.nickname,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  trailing: _getFavoriteWidget(),
                 ),
-                subtitle: Text(
-                  recipe.user.nickname,
-                  style: TextStyle(color: Colors.white),
-                ),
-                trailing: _getFavoriteWidget(),
               ),
             ),
           ),

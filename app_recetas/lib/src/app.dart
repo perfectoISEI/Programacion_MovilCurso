@@ -1,12 +1,14 @@
 import 'dart:ui';
 
 import 'package:app_recetas/src/connection/server_controller.dart';
+import 'package:app_recetas/src/screens/details_page.dart';
 import 'package:app_recetas/src/screens/home_page.dart';
 import 'package:app_recetas/src/screens/login_page.dart';
 import 'package:app_recetas/src/screens/my_favorites_page.dart';
 import 'package:app_recetas/src/screens/mys_recipes_page.dart';
 import 'package:app_recetas/src/screens/register_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modulo1_fake_backend/models.dart';
 import 'package:flutter_modulo1_fake_backend/user.dart';
 
 ServerController _serverController = ServerController();
@@ -56,6 +58,12 @@ class MyApp extends StatelessWidget {
             case "/my_recipes":
               return MyRecipesPage(
                 _serverController,
+              );
+            case "/details":
+              Recipe recipe = settings.arguments;
+              return DetailsPage(
+                recipe: recipe,
+                serverController: _serverController,
               );
           }
         });
