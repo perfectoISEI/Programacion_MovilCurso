@@ -15,8 +15,12 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _loading = false;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   String userName = "";
   String password = "";
+
+  String _errorMessage = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,11 +62,11 @@ class _LoginPageState extends State<LoginPage> {
                             onSaved: (value) {
                               userName = value;
                             },
+                            // ignore: missing_return
                             validator: (value) {
                               if (value.isEmpty) {
                                 return "Este campo es obligatorio";
                               }
-                              //required;
                             },
                           ),
                           SizedBox(
@@ -75,11 +79,11 @@ class _LoginPageState extends State<LoginPage> {
                             onSaved: (value) {
                               password = value;
                             },
+                            // ignore: missing_return
                             validator: (value) {
                               if (value.isEmpty) {
                                 return "Este campo es obligatorio";
                               }
-                              //required;
                             },
                           ),
                           SizedBox(
@@ -98,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  Text("Inciar sesión"),
+                                  Text("Iniciar sesión"),
                                   if (_loading)
                                     Container(
                                       height: 20,
@@ -110,6 +114,18 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
+                          if (_errorMessage.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Text(
+                                _errorMessage,
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                           SizedBox(
                             height: 40,
                           ),
@@ -117,9 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text("¿No estas registrado?"),
-                              //Spacer(
-                              //  flex: 1,
-                              //),
+                              //Spacer(),
                               FlatButton(
                                 child: Text("Registrarse"),
                                 textColor: Theme.of(context).primaryColor,
@@ -144,12 +158,21 @@ class _LoginPageState extends State<LoginPage> {
 
   void _login(BuildContext context) async {
     if (!_loading) {
-      setState(() {
-        _loading = true;
-      });
-      User user = await widget.serverController.login(userName, password);
-      if (user != null) {
-        Navigator.of(context).pushReplacementNamed("/home");
+      if (_formKey.currentState.validate()) {
+        _formKey.currentState.save();
+        setState(() {
+          _loading = true;
+          _errorMessage = "";
+        });
+        User user = await widget.serverController.login(userName, password);
+        if (user != null) {
+          Navigator.of(context).pushReplacementNamed("/home", arguments: user);
+        } else {
+          setState(() {
+            _errorMessage = "Usuario o contraseña incorrecto";
+            _loading = false;
+          });
+        }
       }
     }
   }

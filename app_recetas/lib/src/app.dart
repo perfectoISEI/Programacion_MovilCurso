@@ -1,6 +1,8 @@
 import 'package:app_recetas/src/connection/server_controller.dart';
+import 'package:app_recetas/src/screens/home_page.dart';
 import 'package:app_recetas/src/screens/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modulo1_fake_backend/user.dart';
 
 ServerController _serverController = ServerController();
 
@@ -23,7 +25,8 @@ class MyApp extends StatelessWidget {
             case "/":
               return LoginPage(_serverController, context);
             case "/home":
-            //return HomePage();
+              User userLogged = settings.arguments;
+              return HomePage(userLogged);
           }
         });
       },
