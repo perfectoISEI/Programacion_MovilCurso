@@ -55,6 +55,7 @@ flutter:
     - assets/images/logo.png
     - assets/images/platillos/
     - assets/images/usuarios/
+    - assets/images/drawer.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

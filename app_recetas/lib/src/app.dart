@@ -1,6 +1,10 @@
+import 'dart:ui';
+
 import 'package:app_recetas/src/connection/server_controller.dart';
 import 'package:app_recetas/src/screens/home_page.dart';
 import 'package:app_recetas/src/screens/login_page.dart';
+import 'package:app_recetas/src/screens/my_favorites_page.dart';
+import 'package:app_recetas/src/screens/mys_recipes_page.dart';
 import 'package:app_recetas/src/screens/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modulo1_fake_backend/user.dart';
@@ -14,8 +18,17 @@ class MyApp extends StatelessWidget {
       title: 'Material App',
       theme: ThemeData(
         brightness: Brightness.light,
-        primaryColor: Colors.cyan[800],
+        primaryColor: Colors.cyan,
         accentColor: Colors.cyan[300],
+        accentIconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        appBarTheme: AppBarTheme(
+          textTheme: TextTheme(
+            title: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
       ),
       initialRoute: "/",
       onGenerateRoute: (RouteSettings settings) {
@@ -26,10 +39,24 @@ class MyApp extends StatelessWidget {
             case "/":
               return LoginPage(_serverController, context);
             case "/home":
-              User userLogged = settings.arguments;
-              return HomePage(userLogged);
+              User loggedUser = settings.arguments;
+              _serverController.loggedUser = loggedUser;
+              return HomePage(_serverController);
             case "/register":
-              return RegisterPage(_serverController, context);
+              User looggedUser = settings.arguments;
+              return RegisterPage(
+                _serverController,
+                context,
+                userToEdit: looggedUser,
+              );
+            case "/favorites":
+              return MyFavoritesPage(
+                _serverController,
+              );
+            case "/my_recipes":
+              return MyRecipesPage(
+                _serverController,
+              );
           }
         });
       },
