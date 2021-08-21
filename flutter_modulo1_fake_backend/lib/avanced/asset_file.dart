@@ -1,10 +1,10 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 /*
 * Esta clase ha sido creada para poder cargar un archivo dentro de Asset desde
 * una instancia de File
@@ -13,17 +13,13 @@ class AssetFile implements File {
   final AssetBundle assetBundle;
   final String filePath;
 
-
   AssetFile(this.assetBundle, this.filePath);
 
-
   @override
-  Future<List<int>> readAsBytes() async{
-    final ByteData  bytes =  await this.assetBundle.load(filePath);
+  Future<Uint8List> readAsBytes() async {
+    final ByteData bytes = await this.assetBundle.load(filePath);
     return bytes.buffer.asUint8List();
   }
-
-
 
   @override
   // TODO: implement absolute
@@ -147,10 +143,8 @@ class AssetFile implements File {
   // TODO: implement path
   String get path => filePath;
 
-
-
   @override
-  List<int> readAsBytesSync() {
+  Uint8List readAsBytesSync() {
     // TODO: implement readAsBytesSync
     return null;
   }
@@ -242,31 +236,39 @@ class AssetFile implements File {
   Uri get uri => null;
 
   @override
-  Stream<FileSystemEvent> watch({int events = FileSystemEvent.all, bool recursive = false}) {
+  Stream<FileSystemEvent> watch(
+      {int events = FileSystemEvent.all, bool recursive = false}) {
     // TODO: implement watch
     return null;
   }
 
   @override
-  Future<File> writeAsBytes(List<int> bytes, {FileMode mode = FileMode.write, bool flush = false}) {
+  Future<File> writeAsBytes(List<int> bytes,
+      {FileMode mode = FileMode.write, bool flush = false}) {
     // TODO: implement writeAsBytes
     return null;
   }
 
   @override
-  void writeAsBytesSync(List<int> bytes, {FileMode mode = FileMode.write, bool flush = false}) {
+  void writeAsBytesSync(List<int> bytes,
+      {FileMode mode = FileMode.write, bool flush = false}) {
     // TODO: implement writeAsBytesSync
   }
 
   @override
-  Future<File> writeAsString(String contents, {FileMode mode = FileMode.write, Encoding encoding = utf8, bool flush = false}) {
+  Future<File> writeAsString(String contents,
+      {FileMode mode = FileMode.write,
+      Encoding encoding = utf8,
+      bool flush = false}) {
     // TODO: implement writeAsString
     return null;
   }
 
   @override
-  void writeAsStringSync(String contents, {FileMode mode = FileMode.write, Encoding encoding = utf8, bool flush = false}) {
+  void writeAsStringSync(String contents,
+      {FileMode mode = FileMode.write,
+      Encoding encoding = utf8,
+      bool flush = false}) {
     // TODO: implement writeAsStringSync
   }
-
 }
