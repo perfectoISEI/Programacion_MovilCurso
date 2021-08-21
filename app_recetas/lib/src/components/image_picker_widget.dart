@@ -51,7 +51,7 @@ class ImagePickerWidget extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.image),
-              title: Text("GalerÃ­a"),
+              title: Text("Galerí­a"),
               onTap: () {
                 Navigator.pop(context);
                 _showPickImage(context, ImageSource.gallery);

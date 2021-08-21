@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:app_recetas/src/components/image_picker_widget.dart';
 import 'package:app_recetas/src/connection/server_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modulo1_fake_backend/user.dart';
@@ -22,6 +24,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   String _errorMessage = "";
 
+  File imageFile;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,19 +33,13 @@ class _RegisterPageState extends State<RegisterPage> {
         key: _formKey,
         child: Stack(
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 60),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [Colors.cyan[300], Colors.cyan[800]]),
-              ),
-              child: Image.asset(
-                "assets/images/logo.png",
-                color: Colors.yellow,
-                height: 200,
-              ),
-            ),
+            ImagePickerWidget(
+                imageFile: this.imageFile,
+                onImageSelected: (File file) {
+                  setState(() {
+                    imageFile = file;
+                  });
+                }),
             SizedBox(
               child: AppBar(
                 elevation: 0,
@@ -50,110 +48,106 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               height: kToolbarHeight,
             ),
-            Transform.translate(
-              offset: Offset(0, -120),
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Card(
-                    elevation: 15,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    margin:
-                        const EdgeInsets.only(left: 20, right: 20, top: 260),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 35, vertical: 20),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          TextFormField(
-                            decoration: InputDecoration(labelText: "Usuario"),
-                            onSaved: (value) {
-                              userName = value;
+            Center(
+              child: Transform.translate(
+                offset: Offset(0, -120),
+                child: Card(
+                  elevation: 15,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  margin: const EdgeInsets.only(left: 20, right: 20, top: 260),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 35, vertical: 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        TextFormField(
+                          decoration: InputDecoration(labelText: "Usuario"),
+                          onSaved: (value) {
+                            userName = value;
+                          },
+                          // ignore: missing_return
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return "Este campo es obligatorio";
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: "Contraseña"),
+                          obscureText: true,
+                          onSaved: (value) {
+                            password = value;
+                          },
+                          // ignore: missing_return
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return "Este campo es obligatorio";
+                            }
+                          },
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Theme(
+                          data: Theme.of(context)
+                              .copyWith(accentColor: Colors.white),
+                          child: RaisedButton(
+                            color: Theme.of(context).accentColor,
+                            padding: const EdgeInsets.symmetric(vertical: 25),
+                            textColor: Colors.white,
+                            onPressed: () {
+                              _login(context);
                             },
-                            // ignore: missing_return
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "Este campo es obligatorio";
-                              }
-                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text("Iniciar sesión"),
+                                if (_loading)
+                                  Container(
+                                    height: 20,
+                                    width: 20,
+                                    margin: const EdgeInsets.only(left: 20),
+                                    child: CircularProgressIndicator(),
+                                  ),
+                              ],
+                            ),
                           ),
-                          SizedBox(
-                            height: 40,
+                        ),
+                        if (_errorMessage.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Text(
+                              _errorMessage,
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                          TextFormField(
-                            decoration:
-                                InputDecoration(labelText: "Contraseña"),
-                            obscureText: true,
-                            onSaved: (value) {
-                              password = value;
-                            },
-                            // ignore: missing_return
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "Este campo es obligatorio";
-                              }
-                            },
-                          ),
-                          SizedBox(
-                            height: 40,
-                          ),
-                          Theme(
-                            data: Theme.of(context)
-                                .copyWith(accentColor: Colors.white),
-                            child: RaisedButton(
-                              color: Theme.of(context).accentColor,
-                              padding: const EdgeInsets.symmetric(vertical: 25),
-                              textColor: Colors.white,
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text("¿No estas registrado?"),
+                            //Spacer(),
+                            FlatButton(
+                              child: Text("Registrarse"),
+                              textColor: Theme.of(context).primaryColor,
                               onPressed: () {
-                                _login(context);
+                                _showRegister(context);
                               },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text("Iniciar sesión"),
-                                  if (_loading)
-                                    Container(
-                                      height: 20,
-                                      width: 20,
-                                      margin: const EdgeInsets.only(left: 20),
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          if (_errorMessage.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Text(
-                                _errorMessage,
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          SizedBox(
-                            height: 40,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text("¿No estas registrado?"),
-                              //Spacer(),
-                              FlatButton(
-                                child: Text("Registrarse"),
-                                textColor: Theme.of(context).primaryColor,
-                                onPressed: () {
-                                  _showRegister(context);
-                                },
-                              )
-                            ],
-                          )
-                        ],
-                      ),
+                            )
+                          ],
+                        )
+                      ],
                     ),
                   ),
                 ),
