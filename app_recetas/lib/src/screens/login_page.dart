@@ -23,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    //final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       body: Form(
         key: _formKey,
@@ -39,6 +40,7 @@ class _LoginPageState extends State<LoginPage> {
                 "assets/images/logo.png",
                 color: Colors.white,
                 height: 200,
+                //height: mediaQuery.size.height * 0.15,
               ),
             ),
             Transform.translate(
@@ -132,7 +134,11 @@ class _LoginPageState extends State<LoginPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Text("¿No estas registrado?"),
+                              Expanded(
+                                child: Text(
+                                  "¿No estas registrado?",
+                                ),
+                              ),
                               //Spacer(),
                               FlatButton(
                                 child: Text("Registrarse"),
